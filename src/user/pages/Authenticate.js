@@ -54,7 +54,7 @@ const Authenticate = () => {
           }
         );
         console.log(responseData);
-        auth.login();
+        auth.login(responseData.user);
       } catch (err) {}
     } else {
       try {
@@ -71,9 +71,9 @@ const Authenticate = () => {
           }
         );
 
-        console.log(responseData);
+        console.log(responseData.user);
 
-        auth.login();
+        auth.login(responseData.user);
       } catch (err) {}
     }
 
