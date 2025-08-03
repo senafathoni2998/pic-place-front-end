@@ -5,9 +5,13 @@ import Button from "../../shared/components/FormElement/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import Map from "../../shared/components/UIElements/Map";
 import { AuthContext } from "../../shared/context/auth-context";
+import useHttpClient from "../../shared/hooks/http-hooks";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const PlaceItem = (props) => {
   const auth = React.useContext(AuthContext);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [showMap, setShowMap] = React.useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
@@ -16,13 +20,21 @@ const PlaceItem = (props) => {
 
   const openDeleteConfirmHandler = () => setShowDeleteConfirm(true);
   const closeDeleteConfirmHandler = () => setShowDeleteConfirm(false);
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     console.log("Deleting place with id:", props.id);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        "DELETE"
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
     closeDeleteConfirmHandler();
   };
 
   return (
     <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -47,12 +59,12 @@ const PlaceItem = (props) => {
               "," +
               props.coordinates.lng.toString() +
               "&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            }
-          ></iframe>
-          <script
-            type="text/javascript"
-            src="https://embedmaps.com/google-maps-authorization/script.js?id=5a33be79e53caf0a07dfec499abf84b7b481f165"
-          ></script> */}
+              }
+              ></iframe>
+              <script
+              type="text/javascript"
+              src="https://embedmaps.com/google-maps-authorization/script.js?id=5a33be79e53caf0a07dfec499abf84b7b481f165"
+              ></script> */}
           <Map center={props.coordinates} zoom={15} />
         </div>
       </Modal>
@@ -80,6 +92,7 @@ const PlaceItem = (props) => {
 
       <li className="place-item">
         <Card className="place-item__content">
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img src={props.image} alt={props.title} />
           </div>
