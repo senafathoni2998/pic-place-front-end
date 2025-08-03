@@ -56,3 +56,7 @@
   opacity: 0;
   transition: all 200ms;
 }
+
+.modal__actions {
+  margin-block: 16px;
+}
