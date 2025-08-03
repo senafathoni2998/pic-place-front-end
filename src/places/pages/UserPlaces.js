@@ -24,6 +24,16 @@ const UserPlaces = () => {
     getUserPlace();
   }, [sendRequest, userID]);
 
+  const deletePlaceHandler = async (placeId) => {
+    try {
+      setUserPlace((prevPlaces) =>
+        prevPlaces.filter((place) => place.id !== placeId)
+      );
+    } catch (err) {
+      console.error("Failed to delete place:", err);
+    }
+  };
+
   return (
     <React.Fragment>
       {isLoading && (
@@ -32,7 +42,7 @@ const UserPlaces = () => {
         </div>
       )}
       <ErrorModal error={error} onClear={clearError} />
-      <PlaceList places={userPlace} />
+      <PlaceList places={userPlace} onDeletePlace={deletePlaceHandler} />
     </React.Fragment>
   );
 };
