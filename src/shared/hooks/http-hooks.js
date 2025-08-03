@@ -21,16 +21,29 @@ const useHttpClient = () => {
 
         const responseData = await response.json();
 
+        activeHttpRequests.current = activeHttpRequests.current.filter(
+          (reqCtrl) => reqCtrl !== httpAbortCtrl
+        );
+
+        console.log(activeHttpRequests);
+
         if (!response.ok) {
           throw new Error(responseData.message || "Failed to fetch data");
         }
 
+        setIsLoading(false);
         return responseData;
       } catch (err) {
+        if (err.name === "AbortError") {
+          setIsLoading(false);
+          // Optionally, you can skip setting error for aborts
+          return;
+        }
         console.error(err);
         setError(err.message);
+        setIsLoading(false);
+        throw err;
       }
-      setIsLoading(false);
     },
     []
   );
@@ -41,9 +54,15 @@ const useHttpClient = () => {
 
   useEffect(() => {
     return () => {
-      activeHttpRequests.current.forEach((abortCtrl) => abortCtrl.abort());
+      // Only abort requests that are still pending
+      activeHttpRequests.current.forEach((abortCtrl) => {
+        if (abortCtrl) abortCtrl.abort();
+      });
+      activeHttpRequests.current = [];
     };
   }, []);
 
   return { isLoading, error, sendRequest, clearError };
 };
+
+export default useHttpClient;
