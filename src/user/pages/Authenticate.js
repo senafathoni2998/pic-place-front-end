@@ -87,6 +87,7 @@ const Authenticate = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -96,6 +97,10 @@ const Authenticate = () => {
           ...formState.inputs,
           name: {
             value: "",
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -124,7 +129,9 @@ const Authenticate = () => {
               onInput={inputHandler}
             />
           )}
-          {!isLoginMode && <ImageUpload id="image" center />}
+          {!isLoginMode && (
+            <ImageUpload id="image" center onInput={inputHandler} />
+          )}
           <Input
             element="input"
             type="email"
