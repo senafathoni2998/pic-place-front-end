@@ -13,6 +13,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
 import useHttpClient from "../../shared/hooks/http-hooks";
+import ImageUpload from "../../shared/components/FormElement/ImageUpload";
 
 const Authenticate = () => {
   const auth = React.useContext(AuthContext);
@@ -123,6 +124,7 @@ const Authenticate = () => {
               onInput={inputHandler}
             />
           )}
+          {!isLoginMode && <ImageUpload id="image" center />}
           <Input
             element="input"
             type="email"
