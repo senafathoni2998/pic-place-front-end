@@ -35,13 +35,23 @@ const Authenticate = () => {
     false
   );
 
+  /**
+   * Handles authentication form submission for both login and signup modes.
+   * - In login mode: sends email and password as JSON to the login endpoint.
+   * - In signup mode: sends email, name, password, and image as FormData to the signup endpoint.
+   * - On success: calls auth.login with the returned user data.
+   * - Shows loading spinner and error modal via useHttpClient hook.
+   */
   const authSubmitHandler = async (event) => {
     event.preventDefault();
+
+    // Prevent submission if form is invalid
     if (!formState.isValid) {
       return;
     }
 
     if (isLoginMode) {
+      // LOGIN MODE: send credentials as JSON
       try {
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/login",
@@ -54,29 +64,38 @@ const Authenticate = () => {
             "Content-Type": "application/json",
           }
         );
-        console.log(responseData);
+        // Log response and authenticate user
+        console.log("Login response:", responseData);
         auth.login(responseData.user);
-      } catch (err) {}
+      } catch (err) {
+        // Error handled by useHttpClient
+      }
     } else {
+      // SIGNUP MODE: send data as FormData (supports image upload)
       try {
         const formData = new FormData();
         formData.append("email", formState.inputs.email.value);
         formData.append("name", formState.inputs.name.value);
         formData.append("password", formState.inputs.password.value);
         formData.append("image", formState.inputs.image.value);
-        console.log(formState.inputs);
+
+        console.log("Signup form inputs:", formState.inputs);
+
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
           formData
         );
 
-        console.log(responseData.user);
-
+        // Log response and authenticate user
+        console.log("Signup response:", responseData.user);
         auth.login(responseData.user);
-      } catch (err) {}
+      } catch (err) {
+        // Error handled by useHttpClient
+      }
     }
 
+    // Debug: log all form inputs
     console.log("Form submitted!", formState.inputs);
   };
 
