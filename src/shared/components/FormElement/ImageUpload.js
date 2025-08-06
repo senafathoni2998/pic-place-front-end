@@ -18,6 +18,20 @@ const ImageUpload = (props) => {
     fileReviewUrl.readAsDataURL(file);
   }, [file]);
 
+  /**
+   * Handles the file input change event for image upload.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event triggered when a user selects a file.
+   *
+   * This function:
+   * - Initializes a variable to store the picked file.
+   * - Initializes a variable to track file validity, using the current validity state.
+   * - Checks if exactly one file is selected by the user.
+   *   - If true, assigns the selected file to `pickedFile` and updates the file state.
+   *   - Sets the file validity to true.
+   * - Updates the validity state.
+   * - Calls the parent component's `onInput` handler with the input id, picked file, and validity status.
+   */
   const pickedHandler = (event) => {
     let pickedFile;
     let fileIsValid = isValid;
