@@ -99,32 +99,44 @@ const Authenticate = () => {
     console.log("Form submitted!", formState.inputs);
   };
 
+  /**
+   * Handles switching between login and signup modes.
+   * - In signup mode: adds 'name' and 'image' fields to the form state.
+   * - In login mode: removes 'name' and 'image' fields from the form state.
+   * - Updates form validity accordingly.
+   */
   const swithchModeHandler = () => {
+    // If currently in signup mode, switch to login mode
     if (!isLoginMode) {
+      // Remove 'name' and 'image' fields from form state
       setFormData(
         {
           ...formState.inputs,
-          name: undefined,
-          image: undefined,
+          name: undefined, // Remove name field
+          image: undefined, // Remove image field
         },
+        // Set form validity based on email and password only
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
+      // If currently in login mode, switch to signup mode
+      // Add 'name' and 'image' fields to form state with initial values
       setFormData(
         {
           ...formState.inputs,
           name: {
             value: "",
-            isValid: false,
+            isValid: false, // Name starts as invalid
           },
           image: {
             value: null,
-            isValid: false,
+            isValid: false, // Image starts as invalid
           },
         },
-        false
+        false // Form is invalid until all fields are valid
       );
     }
+    // Toggle the mode (login <-> signup)
     setIsLoginMode((prevMode) => !prevMode);
   };
 
