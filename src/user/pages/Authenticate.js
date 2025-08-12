@@ -66,7 +66,7 @@ const Authenticate = () => {
         );
         // Log response and authenticate user
         console.log("Login response:", responseData);
-        auth.login(responseData.user);
+        auth.login(responseData.user, responseData.user.token);
       } catch (err) {
         // Error handled by useHttpClient
       }
@@ -89,7 +89,7 @@ const Authenticate = () => {
 
         // Log response and authenticate user
         console.log("Signup response:", responseData.user);
-        auth.login(responseData.user);
+        auth.login(responseData.user, responseData.user.token);
       } catch (err) {
         // Error handled by useHttpClient
       }
