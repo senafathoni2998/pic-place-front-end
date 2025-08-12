@@ -70,6 +70,7 @@ const UpdatePlace = () => {
       }),
       {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + auth.token,
       }
     );
     console.log(auth.userData.id);
