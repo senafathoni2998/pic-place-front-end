@@ -41,7 +41,7 @@ const App = () => {
         console.log(err);
       }
     }
-  });
+  }, []);
 
   console.log("TOKEN", token);
   let routes;
