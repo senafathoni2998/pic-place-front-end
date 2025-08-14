@@ -16,6 +16,10 @@ const App = () => {
     console.log("TOKEN", token);
     setToken(token);
     setUserData(user);
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({ user: user, token: token })
+    );
   }, []);
 
   const logoutHandler = useCallback(() => {
