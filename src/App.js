@@ -35,10 +35,20 @@ const App = () => {
     );
   }, []);
 
+  /**
+   * Handles user logout by clearing authentication token and user data.
+   *
+   * This function resets the authentication state by removing the user and token
+   * from both React state and localStorage. It is memoized using useCallback to prevent
+   * unnecessary re-creations.
+   *
+   * @function
+   * @returns {void}
+   */
   const logoutHandler = useCallback(() => {
-    setToken(null);
-    setUserData(null);
-    localStorage.removeItem("userData");
+    setToken(null); // Clear authentication token from state
+    setUserData(null); // Clear user data from state
+    localStorage.removeItem("userData"); // Remove user data from localStorage
   }, []);
 
   useEffect(() => {
