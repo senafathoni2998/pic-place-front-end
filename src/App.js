@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Users from "./user/pages/Users";
 import NewPlaces from "./places/pages/NewPlaces";
@@ -25,7 +25,23 @@ const App = () => {
   const logoutHandler = useCallback(() => {
     setToken(null);
     setUserData(null);
+    localStorage.removeItem("userData");
   }, []);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("userData");
+    if (storedData) {
+      try {
+        const userData = JSON.parse(storedData);
+        if (userData && userData.user && userData.token) {
+          setUserData(userData.user);
+          setToken(userData.token);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  });
 
   console.log("TOKEN", token);
   let routes;
