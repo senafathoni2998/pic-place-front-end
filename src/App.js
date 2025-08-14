@@ -12,6 +12,19 @@ const App = () => {
   const [token, setToken] = React.useState(null);
   const [userData, setUserData] = React.useState(null);
 
+  /**
+   * Handles user login by setting authentication token and user data.
+   *
+   * This function updates the authentication state by storing the provided user and token
+   * in both React state and localStorage. It is memoized using useCallback to prevent
+   * unnecessary re-creations.
+   *
+   * @function
+   * @param {Object} user - The user object containing user information.
+   * @param {string} token - The authentication token for the user session.
+   *
+   * @returns {void}
+   */
   const loginHandler = useCallback((user, token) => {
     console.log("TOKEN", token);
     setToken(token);
