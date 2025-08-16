@@ -9,6 +9,15 @@ import Authenticate from "./user/pages/Authenticate";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
+/**
+ * The main application component for the Pic Place front-end.
+ *
+ * Handles authentication state and routing logic based on user login status.
+ * Provides authentication context to the rest of the app.
+ *
+ * @component
+ * @returns {JSX.Element} The root component containing routing and context providers.
+ */
 const App = () => {
   const { token, userData, loginHandler, logoutHandler } = useAuth();
 
