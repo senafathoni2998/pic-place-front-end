@@ -25,13 +25,19 @@ const App = () => {
    *
    * @returns {void}
    */
-  const loginHandler = useCallback((user, token) => {
-    console.log("TOKEN", token);
+  const loginHandler = useCallback((user, token, expireDate) => {
+    // console.log("TOKEN", token);
     setToken(token);
     setUserData(user);
+    const tokenExpireDate =
+      expireDate || new Date(new Date().getTime() + 60 * 60 * 1000);
     localStorage.setItem(
       "userData",
-      JSON.stringify({ user: user, token: token })
+      JSON.stringify({
+        user,
+        token,
+        tokenExpireDate: tokenExpireDate.toISOString(),
+      })
     );
   }, []);
 
@@ -49,16 +55,26 @@ const App = () => {
     setToken(null); // Clear authentication token from state
     setUserData(null); // Clear user data from state
     localStorage.removeItem("userData"); // Remove user data from localStorage
-  }, []);
+  }, [loginHandler]);
 
   useEffect(() => {
     const storedData = localStorage.getItem("userData");
     if (storedData) {
       try {
         const userData = JSON.parse(storedData);
-        if (userData && userData.user && userData.token) {
-          setUserData(userData.user);
-          setToken(userData.token);
+        if (
+          userData &&
+          userData.user &&
+          userData.token &&
+          new Date(userData.tokenExpireDate) > new Date()
+        ) {
+          loginHandler(
+            userData.user,
+            userData.token,
+            new Date(userData.tokenExpireDate)
+          );
+          // setUserData(userData.user);
+          // setToken(userData.token);
         }
       } catch (err) {
         console.log(err);
