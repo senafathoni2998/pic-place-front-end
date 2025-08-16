@@ -8,9 +8,12 @@ import UpdatePlace from "./places/pages/UpdatePlace";
 import Authenticate from "./user/pages/Authenticate";
 import { AuthContext } from "./shared/context/auth-context";
 
+let logoutTimer;
+
 const App = () => {
   const [token, setToken] = React.useState(null);
   const [userData, setUserData] = React.useState(null);
+  const [tokenExpireDate, setTokenExpireDate] = React.useState(null);
 
   /**
    * Handles user login by setting authentication token and user data.
@@ -31,6 +34,7 @@ const App = () => {
     setUserData(user);
     const tokenExpireDate =
       expireDate || new Date(new Date().getTime() + 60 * 60 * 1000);
+    setTokenExpireDate(tokenExpireDate);
     localStorage.setItem(
       "userData",
       JSON.stringify({
@@ -82,7 +86,16 @@ const App = () => {
     }
   }, []);
 
-  console.log("TOKEN", token);
+  useEffect(() => {
+    if (token && tokenExpireDate) {
+      const remainingTime =
+        new Date(tokenExpireDate).getTime() - new Date().getTime();
+      logoutTimer = setTimeout(logout, remainingTime);
+    } else {
+      clearTimeout(logoutTimer);
+    }
+  }, [token, logout, tokenExpireDate]);
+
   let routes;
   if (token) {
     routes = (
