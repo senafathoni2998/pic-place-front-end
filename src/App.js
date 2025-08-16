@@ -1,13 +1,18 @@
 import React, { useCallback, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Users from "./user/pages/Users";
-import NewPlaces from "./places/pages/NewPlaces";
-import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import UserPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
-import Authenticate from "./user/pages/Authenticate";
+import React, { lazy, Suspense } from "react";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+
+const Users = lazy(() => import("./user/pages/Users"));
+const NewPlaces = lazy(() => import("./places/pages/NewPlaces"));
+const MainNavigation = lazy(() =>
+  import("./shared/components/Navigation/MainNavigation")
+);
+const UserPlaces = lazy(() => import("./places/pages/UserPlaces"));
+const UpdatePlace = lazy(() => import("./places/pages/UpdatePlace"));
+const Authenticate = lazy(() => import("./user/pages/Authenticate"));
 
 /**
  * The main application component for the Pic Place front-end.
@@ -55,7 +60,17 @@ const App = () => {
     >
       <BrowserRouter>
         <MainNavigation />
-        <main>{routes}</main>
+        <main>
+          <Suspense
+            fallback={
+              <div className="center">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            {routes}
+          </Suspense>
+        </main>
       </BrowserRouter>
     </AuthContext.Provider>
   );
